@@ -17,7 +17,7 @@ class App extends React.Component {
     isChecked: true,
     wynik: '',
     taxPLN: 0,
-    datakursu: '2019-03-25',
+    datakursu: '',
     dateto: '',
     datefrom: ''
   };
@@ -78,11 +78,41 @@ class App extends React.Component {
       tax: e.target.value
     });
   }
+
   handleDateFromChange = (e) => {
+    //this.handleDateToChange();
+    const daysfrom = new Date(e.target.value);
+    const daysto = new Date(this.state.dateto);
+    const numberofdays = (1000 * 3600 * 24);
+
+    if (daysfrom>daysto) {
+      alert ('data od musi być wcześniejsza od daty do');
+    }
+    
     this.setState({
-      datefrom: e.target.value
+      datefrom: e.target.value,
+      days: (daysto.getTime()-daysfrom.getTime())/numberofdays+1
     });
+
+    if (this.state.days==1) {
+      alert ('jedynka');
+    }
   }
+
+/*
+  handleDateFromChange = (e) => {
+    //this.handleDateToChange();
+    const daysfrom = new Date(e.target.value);
+    const daysto = new Date(this.state.dateto);
+    
+    this.setState({
+      datefrom: e.target.value,
+    });
+
+    this.handleDateChange();
+  }
+
+  */
   
   handleDateToChange = (e) => {
     const daysfrom = new Date(this.state.datefrom);
@@ -94,7 +124,18 @@ class App extends React.Component {
     });
 
   }
-  
+
+/*
+
+  handleDateChange = () => {
+    
+   const numberofdays = (1000 * 3600 * 24);
+    this.setState({
+      days: (daysto.getTime()-daysfrom.getTime())/numberofdays+1
+    });
+
+  }
+  */
 handleDataKursu = (e) => {
     const aktualDate=e.target.value;
     const url= 'https://api.nbp.pl/api/exchangerates/rates/a/eur/'+aktualDate+'/?format=json';
@@ -137,8 +178,9 @@ fetch(url)
           <option value="Belgia">Belgia</option>
           <option value="Francja">Francja</option>
         </select>
-        <p>Wysokość diety: <input value={this.state.dieta} onChange={this.handleDietaChange} /></p>
-         Data od:   <input type="date" value={this.state.datefrom} onChange={this.handleDateFromChange}/> Data do:  <input type="date" value={this.state.dateto} onChange={this.handleDateToChange}/> <p>Ilość dni: <input value={this.state.days} onChange={this.handleDaysChange} /> </p>
+        <p>Wysokość diety: <input className='input' value={this.state.dieta} onChange={this.handleDietaChange} /></p>
+         Data od:   <input type="date" value={this.state.datefrom} onChange={this.handleDateFromChange}/> Data do:  <input type="date" value={this.state.dateto} onChange={this.handleDateToChange}/> 
+         <p>Ilość dni: <input value={this.state.days} onChange={this.handleDaysChange} /> </p>
         <p> Data kursu: <input type="date" value={this.state.datakursu} onChange={this.handleDataKursu} /></p> 
         <p> Wysokość kursu w euro: <input value={this.state.kurs} onChange={this.handleKursChange} /></p>
          <p> Przychód w euro: <input value={this.state.profit} onChange={this.handleProfitChange} /></p> 
