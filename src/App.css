@@ -14,8 +14,28 @@ h1 {
   text-align: center;
 }
 
-.input {
+input {
   padding: 5px;
+  width: auto;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+select {
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button {
+  margin: 0 auto;
+  padding: 10px;
+  display: block;
+  width: 100%;
+  font-weight: bold;
+  border-radius: 5px;
+  color: white;
+  background: rgb(7, 3, 24);
+  cursor: pointer;
 }
 .App-logo {
   animation: App-logo-spin infinite 20s linear;

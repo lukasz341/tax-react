@@ -8,13 +8,13 @@ const data = new Date();
 class App extends React.Component {
   state = {
     days: 0,
-    dieta: 50,
+    dieta: 49,
     country: 'Niemcy',
     kurs:'',
     message: '',
     profit: 0,
     tax: 0,
-    isChecked: true,
+   // isChecked: true,
     wynik: '',
     taxPLN: 0,
     datakursu: '',
@@ -35,16 +35,25 @@ class App extends React.Component {
  
   handleCountryChange = (e) => {
     const country=e.target.value;
-    let dietacountry = 0;
+    let dietacountry = '';
  switch(country) {
   case 'Niemcy':
-     dietacountry= 50;
+     dietacountry= 49;
     break;
   case 'Belgia':
      dietacountry=48;
     break;
   case 'Francja':
-     dietacountry=49;
+     dietacountry=50;
+    break;
+    case 'Holandia':
+     dietacountry=50;
+     break;
+     case 'Irlandia':
+     dietacountry=52;
+     break;
+     case 'other':
+      alert ('wpisz kwotę diety ręcznie');
     break;
   default:
   
@@ -55,13 +64,29 @@ class App extends React.Component {
     });
   }
   
-  handleWynikChange = (e) => {
+  handleWynikChange = () => {
     this.setState({
       wynik: (this.state.profit - (0.3 * this.state.dieta * this.state.days))*this.state.kurs,
       taxPLN: this.state.tax * this.state.kurs,
     });
-    console.log(this.state.kurs);
+    const country=this.state.country;
+    const wynik= this.state.wynik;
+  
+    if (country=='Niemcy'|| country == 'Francja') {
+      alert ('Kwote ' +wynik+' należy wpisać w kolumnie C w załączniku PIT/ZG');
+    }
+    else {
+        alert ('inne państwo');
+       }
+    
   }
+
+  handleWynik1Change = (e) => {
+    this.setState({
+      wynik: e.target.value
+    });
+  }
+
   handleKursChange = (e) => {
     this.setState({
       kurs: e.target.value
@@ -94,30 +119,19 @@ class App extends React.Component {
       days: (daysto.getTime()-daysfrom.getTime())/numberofdays+1
     });
 
-    if (this.state.days==1) {
-      alert ('jedynka');
-    }
+   
   }
 
-/*
-  handleDateFromChange = (e) => {
-    //this.handleDateToChange();
-    const daysfrom = new Date(e.target.value);
-    const daysto = new Date(this.state.dateto);
-    
-    this.setState({
-      datefrom: e.target.value,
-    });
 
-    this.handleDateChange();
-  }
-
-  */
   
   handleDateToChange = (e) => {
     const daysfrom = new Date(this.state.datefrom);
     const daysto = new Date(e.target.value);
    const numberofdays = (1000 * 3600 * 24);
+
+   if (daysfrom>daysto) {
+    alert ('data od musi być wcześniejsza od daty do');
+  }
     this.setState({
      dateto: e.target.value,
       days: (daysto.getTime()-daysfrom.getTime())/numberofdays+1
@@ -125,17 +139,7 @@ class App extends React.Component {
 
   }
 
-/*
 
-  handleDateChange = () => {
-    
-   const numberofdays = (1000 * 3600 * 24);
-    this.setState({
-      days: (daysto.getTime()-daysfrom.getTime())/numberofdays+1
-    });
-
-  }
-  */
 handleDataKursu = (e) => {
     const aktualDate=e.target.value;
     const url= 'https://api.nbp.pl/api/exchangerates/rates/a/eur/'+aktualDate+'/?format=json';
@@ -175,8 +179,11 @@ fetch(url)
       <h1> Podatek zagraniczny</h1>
          Wybierz państwo: <select value={this.state.country} onChange={this.handleCountryChange}>
           <option value="Niemcy">Niemcy</option>
-          <option value="Belgia">Belgia</option>
           <option value="Francja">Francja</option>
+          <option value="Belgia">Belgia</option>
+          <option value="Holandia">Holandia</option>
+          <option value="Irlandia">Irlandia</option>
+          <option value="other">inne państwo</option>
         </select>
         <p>Wysokość diety: <input className='input' value={this.state.dieta} onChange={this.handleDietaChange} /></p>
          Data od:   <input type="date" value={this.state.datefrom} onChange={this.handleDateFromChange}/> Data do:  <input type="date" value={this.state.dateto} onChange={this.handleDateToChange}/> 
@@ -186,13 +193,11 @@ fetch(url)
          <p> Przychód w euro: <input value={this.state.profit} onChange={this.handleProfitChange} /></p> 
          <p> Podatek w euro: <input value={this.state.tax} onChange={this.handleTaxChange} /></p> 
        
-        <label>
-          <input type="checkbox" checked={this.state.isChecked} onChange={this.handleCheckboxChange} />
-        </label>
+    
         <div> 
          
           <button onClick={this.handleWynikChange}> Oblicz </button> 
-          <InputForm wynik={this.state.wynik} taxPLN={this.state.taxPLN}/> 
+          <InputForm  wynik={this.state.wynik} taxPLN={this.state.taxPLN}/> 
         </div>
       </div>
       </div>
