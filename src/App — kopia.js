@@ -8,23 +8,23 @@ const data = new Date();
 class App extends React.Component {
   state = {
     days: 0,
-    diet: 49,
+    dieta: 49,
     country: 'Niemcy',
-    course:'',
+    kurs:'',
     message: '',
     profit: 0,
     tax: 0,
    // isChecked: true,
-    result: '',
+    wynik: '',
     taxPLN: 0,
-    dateCourse: '',
+    datakursu: '',
     dateto: '',
     datefrom: ''
   };
   
- handleDietChange = (e) => {
+ handleDietaChange = (e) => {
     this.setState({
-      diet: e.target.value,
+      dieta: e.target.value,
     });
   }
  handleDaysChange = (e) => {
@@ -35,22 +35,22 @@ class App extends React.Component {
  
   handleCountryChange = (e) => {
     const country=e.target.value;
-    let dietcountry = '';
+    let dietacountry = '';
  switch(country) {
   case 'Niemcy':
-     dietcountry= 49;
+     dietacountry= 49;
     break;
   case 'Belgia':
-     dietcountry=48;
+     dietacountry=48;
     break;
   case 'Francja':
-     dietcountry=50;
+     dietacountry=50;
     break;
     case 'Holandia':
-     dietcountry=50;
+     dietacountry=50;
      break;
      case 'Irlandia':
-     dietcountry=52;
+     dietacountry=52;
      break;
      case 'other':
       alert ('wpisz kwotę diety ręcznie');
@@ -60,30 +60,30 @@ class App extends React.Component {
 } 
     this.setState({
      country: e.target.value,
-      diet: dietcountry
+      dieta: dietacountry
     });
   }
   
   resultChange =() => {
 
     this.setState({
-      result: (this.state.profit - (0.3 * this.state.diet * this.state.days))*this.state.course,
-      taxPLN: this.state.tax * this.state.course,
+      wynik: (this.state.profit - (0.3 * this.state.dieta * this.state.days))*this.state.kurs,
+      taxPLN: this.state.tax * this.state.kurs,
     });
 
   }
 
-  handleResultChange = () => {
+  handleWynikChange = () => {
     this.resultChange();
     
-   // if (this.state.result==0) {
-   //   alert ('wpisz poprawną kwotę');
-   // }
+    if (this.state.wynik==0) {
+      alert ('wpisz poprawną kwotę');
+    }
     const country=this.state.country;
-    const result= this.state.result;
+    const wynik= this.state.wynik;
   /*
     if (country=='Niemcy'|| country == 'Francja') {
-      alert ('Kwote ' +result+' należy wpisać w kolumnie C w załączniku PIT/ZG');
+      alert ('Kwote ' +wynik+' należy wpisać w kolumnie C w załączniku PIT/ZG');
     }
     else {
         alert ('inne państwo');
@@ -91,15 +91,15 @@ class App extends React.Component {
     */
   }
 
-  handleResult1Change = (e) => {
+  handleWynik1Change = (e) => {
     this.setState({
-      result: e.target.value
+      wynik: e.target.value
     });
   }
 
   handleKursChange = (e) => {
     this.setState({
-      course: e.target.value
+      kurs: e.target.value
     });
   }
   
@@ -150,7 +150,7 @@ class App extends React.Component {
   }
 
 
-handleDateCourse = (e) => {
+handleDataKursu = (e) => {
     const aktualDate=e.target.value;
     const url= 'https://api.nbp.pl/api/exchangerates/rates/a/eur/'+aktualDate+'/?format=json';
 fetch(url)
@@ -160,15 +160,15 @@ fetch(url)
         console.log(wal); 
   
    this.setState({
-     dateCourse: aktualDate,
-      course: wal
+     datakursu: aktualDate,
+      kurs: wal
     })
   
 }
     ).catch(error => {
      this.setState({
-     dateCourse: aktualDate,
-      course: ''
+     datakursu: aktualDate,
+      kurs: ''
     });
   alert('Brak kursu z podanego dnia')
 }
@@ -187,7 +187,7 @@ fetch(url)
       <div>
       <div className='main'>
       <h1> Podatek zagraniczny</h1>
-      <h4> Program służy do pomocy przy wypełnianiu zeznania PIT-36 wraz z załącznikiem PIT/ZG (dochody z zagranicznych źródeł)</h4>
+      <h4> Program służy do pomocy przy wypełnianiu zeznania PIT-36 z załącznikiem PIT/ZG</h4>
          Wybierz państwo: <select value={this.state.country} onChange={this.handleCountryChange}>
           <option value="Niemcy">Niemcy</option>
           <option value="Francja">Francja</option>
@@ -196,19 +196,19 @@ fetch(url)
           <option value="Irlandia">Irlandia</option>
           <option value="other">inne państwo</option>
         </select>
-        <p>Wysokość diety: <input className='input' value={this.state.diet} onChange={this.handleDietChange} /></p>
+        <p>Wysokość diety: <input className='input' value={this.state.dieta} onChange={this.handleDietaChange} /></p>
          Data od:   <input type="date" value={this.state.datefrom} onChange={this.handleDateFromChange}/> Data do:  <input type="date" value={this.state.dateto} onChange={this.handleDateToChange}/> 
          <p>Ilość dni: <input value={this.state.days} onChange={this.handleDaysChange} /> </p>
-        <p> Data kursu: <input type="date" value={this.state.dateCourse} onChange={this.handleDateCourse} /></p> 
-        <p> Wysokość kursu w euro: <input value={this.state.course} onChange={this.handleKursChange} /></p>
+        <p> Data kursu: <input type="date" value={this.state.datakursu} onChange={this.handleDataKursu} /></p> 
+        <p> Wysokość kursu w euro: <input value={this.state.kurs} onChange={this.handleKursChange} /></p>
          <p> Przychód w euro: <input value={this.state.profit} onChange={this.handleProfitChange} /></p> 
          <p> Podatek w euro: <input value={this.state.tax} onChange={this.handleTaxChange} /></p> 
        
     
         <div> 
          
-          <button onClick={this.handleResultChange}> Oblicz </button> 
-          <InputForm  result={this.state.result} taxPLN={this.state.taxPLN}/> 
+          <button onClick={this.handleWynikChange}> Oblicz </button> 
+          <InputForm  wynik={this.state.wynik} taxPLN={this.state.taxPLN}/> 
         </div>
       </div>
       </div>

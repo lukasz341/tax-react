@@ -2,6 +2,7 @@
   "name": "podatek",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://webdeveloper.usermd.net/podatek",
   "dependencies": {
     "react": "^16.8.5",
     "react-dom": "^16.8.5",
